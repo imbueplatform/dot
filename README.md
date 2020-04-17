@@ -1,2 +1,2 @@
-# imbue-cell
+# imbue-dot
 Imbue Dot Network
