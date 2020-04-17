@@ -5,7 +5,7 @@ let crypto = require('crypto');
 
 let key = crypto.randomBytes(32);
 
-let { Dot } = require('../dist');
+
 
 console.log(`Your key: ${key.toString('hex')}`);
 
@@ -13,11 +13,27 @@ let dot = new Dot({
     discoveryKey: key
 });
 
-dot.join({}).then((cell) => {
+let finder = new Dot({
+    discoveryKey: key
+});
+
+dot.join({
+    announce: true
+}).then((cell) => {
     cell.on('connection', () => {
         debug('connected');
     });
-})
+}).catch((err) => debug(err));
+
+
+finder.join({
+    lookup: true,
+    port: 3286
+}).then((cell) => {
+    cell.on('connection', () => {
+        debug('connected');
+    });
+}).catch((err) => debug(err));
 
 
 

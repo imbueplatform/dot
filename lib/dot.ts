@@ -1,6 +1,7 @@
 
-import { Cell } from '@imbueplatform/cell';
+import { Cell, CellPeer } from '@imbueplatform/cell';
 import { createNetwork } from './network'
+import { DotConfig } from './common/types'
 import fs from 'fs';
 import Debug from 'debug';
 
@@ -8,11 +9,7 @@ const debug = Debug("imbue:dot");
 
 const noop = () => {}
 
-export interface DotConfig {
-    announce?: boolean,
-    sparse?: boolean,
-    lookup?: boolean
-}
+
 
 export class Dot {
 
@@ -24,10 +21,13 @@ export class Dot {
         this._atom = atom;
     }
 
-    public async join(options: any): Promise<Cell> {
+    public async join(options?: DotConfig): Promise<Cell> {
 
         let networkOptions: any = Object.assign({}, {
-            stream: this._createStream
+            stream: this._createStream,
+            announce: options?.announce || false,
+            lookup: options?.lookup || false,
+            port: options?.port || 3284
         }, options)
 
         this._network = await createNetwork(this._atom, networkOptions);
@@ -70,8 +70,10 @@ export class Dot {
             return this.leave()
     }
 
-    private _createStream(peer: any): any {
+    private _createStream(peer: CellPeer): any {
         let _this: Dot = this;
+
+        fs.writeFileSync('file.txt', "hello");
 
         let _stream = fs.createReadStream('file.txt');
 

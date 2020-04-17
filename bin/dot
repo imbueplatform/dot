@@ -1,0 +1,46 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+
+let { Dot } = require('../dist');
+let debug = require('debug');
+let crypto = require('crypto');
+
+let dot;
+
+program
+    .command("cell")
+    .option("-p, --port [server port]", "dot server port")
+    .option("-l, --lookup", "look for available cells")
+    .option("-a, --announce", "announce to the network that your cell can be found")
+    .option("-k, --key [discovery key]", "generate or provide discovery key")
+    .option("-d, --debug", "debug flag")
+    .action((cmd) => {
+
+        if(cmd.debug) 
+            debug.enable("imbue:*");
+
+        const config = {
+            init: {
+                discoveryKey: cmd.key ? Buffer.from(cmd.key, 'hex') : crypto.randomBytes(32)
+            },
+            dot: {
+                announce: cmd.announce || false,
+                lookup: cmd.lookup || true,
+                port: cmd.port || 3285
+            }
+            
+        }
+
+        console.log(`Sharing: ${config.init.discoveryKey.toString('hex')}\n`)
+
+        dot = new Dot(config.init);
+
+        dot.join(config.dot)
+           .then((cell) => cell.on('connection', () => debug('connected')))
+           .catch((err) => debug(err));
+
+    });
+    
+
+program.parse(process.argv);
