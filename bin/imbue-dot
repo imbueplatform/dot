@@ -1,0 +1,23 @@
+#! /usr/bin/env node
+
+let debug = require('debug')("imbue:dot:main");
+let crypto = require('crypto');
+
+let key = crypto.randomBytes(32);
+
+let { Dot } = require('../dist');
+
+console.log(`Your key: ${key.toString('hex')}`);
+
+let dot = new Dot({
+    discoveryKey: key
+});
+
+dot.join({}).then((cell) => {
+    cell.on('connection', () => {
+        debug('connected');
+    });
+})
+
+
+
