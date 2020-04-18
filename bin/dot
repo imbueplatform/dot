@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 
 const program = require('commander');
+const debug = require('debug');
+const crypto = require('crypto');
+const figlet = require('figlet');
 
 let { Dot } = require('../dist');
-let debug = require('debug');
-let crypto = require('crypto');
-
 let dot;
+
+console.log(figlet.textSync("Imbue D.O.T. Network"));
 
 program
     .command("cell")
@@ -32,7 +34,7 @@ program
             
         }
 
-        console.log(`Sharing: ${config.init.discoveryKey.toString('hex')}\n`)
+        console.log(`(IRL) imbue://${config.init.discoveryKey.toString('hex')}\n`)
 
         dot = new Dot(config.init);
 

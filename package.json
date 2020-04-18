@@ -3,12 +3,13 @@
   "version": "0.0.1",
   "description": "Imbue Dot Network",
   "bin": {
-    "imbue-cell": "./bin/imbue-dot"
+    "imbue-dot": "./bin/dot",
+    "dot": "./bin/dot",
+    "imbue": "./bin/dot"
   },
   "scripts": {
     "postinstall": "npx tsc",
     "prepublishOnly": "npx tsc",
-    "imbue:dev": "tsc-watch --onSuccess \"node ./bin/imbue-dot\"",
     "imbue:test": "npx tsc && NODE_ENV=test LOG_LEVEL=off jest test/*.test.js",
     "print:project": "figlet 'Imbue D.O.T.'"
   },
@@ -25,7 +26,7 @@
     "@types/node": "^13.11.1",
     "@types/pump": "^1.1.0",
     "@types/debug": "^4.1.5",
-    "@imbueplatform/cell": "^0.0.17",
+    "@imbueplatform/cell": "^0.0.18",
     "typescript": "^3.8.3",
     "pump": "^3.0.0",
     "debug": "^4.1.1",
@@ -40,7 +41,7 @@
     "jest": "^25.3.0",
     "lint-staged": "^10.1.3",
     "prettier": "^2.0.4",
-    "figlet-cli": "0.1.1"
+    "figlet": "^1.3.0"
   },
   "lint-staged": {
     "*.js": [
