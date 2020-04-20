@@ -10,8 +10,7 @@
   "scripts": {
     "postinstall": "npx tsc",
     "prepublishOnly": "npx tsc",
-    "imbue:test": "npx tsc && NODE_ENV=test LOG_LEVEL=off jest test/*.test.js",
-    "print:project": "figlet 'Imbue D.O.T.'"
+    "imbue:test": "npx tsc && NODE_ENV=test LOG_LEVEL=off jest test/*.test.js"
   },
   "repository": {
     "type": "git",
