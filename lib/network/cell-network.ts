@@ -1,5 +1,5 @@
 import pump from 'pump';
-import { Cell } from '@imbueplatform/cell';
+import { Cell } from '@imbueplatform/dot-cell';
 
 let debug = require('debug')('imbue:dot:network')
 

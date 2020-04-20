@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const figlet = require('figlet');
 
 let { Dot } = require('../dist');
+let { findAvailablePort } = require('@imbueplatform/dot-cell');
 let dot;
 
 console.log(figlet.textSync("Imbue D.O.T. Network"));
@@ -15,9 +16,10 @@ program
     .option("-p, --port [server port]", "dot server port")
     .option("-l, --lookup", "look for available cells")
     .option("-a, --announce", "announce to the network that your cell can be found")
+    .option("-h', --http", "start Dot http service")
     .option("-k, --key [discovery key]", "generate or provide discovery key")
     .option("-d, --debug", "debug flag")
-    .action((cmd) => {
+    .action(async (cmd) => {
 
         if(cmd.debug) 
             debug.enable("imbue:*");
@@ -29,7 +31,7 @@ program
             dot: {
                 announce: cmd.announce || false,
                 lookup: cmd.lookup || true,
-                port: cmd.port || 3285
+                port: cmd.port || await findAvailablePort(3285)
             }
             
         }
@@ -41,6 +43,9 @@ program
         dot.join(config.dot)
            .then((cell) => cell.on('connection', () => debug('connected')))
            .catch((err) => debug(err));
+
+        if(cmd.http)
+            await dot.startHttpService();
 
     });
     

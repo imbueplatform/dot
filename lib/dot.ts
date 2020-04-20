@@ -1,5 +1,6 @@
 
-import { Cell, CellPeer } from '@imbueplatform/cell';
+import { Cell, CellPeer, findAvailablePort } from '@imbueplatform/dot-cell';
+import { DotHttp, DotHttpConfig } from '@imbueplatform/dot-http'
 import { createNetwork } from './network'
 import { DotConfig } from './common/types'
 import fs from 'fs';
@@ -9,16 +10,16 @@ const debug = Debug("imbue:dot");
 
 const noop = () => {}
 
-
-
 export class Dot {
 
+    private _dotHttp: DotHttp;
     private _network: Cell | undefined = undefined;
     private _atom: any | undefined = undefined;
     private _synced: Boolean = false;
 
     constructor(atom: any) {
         this._atom = atom;
+        this._dotHttp = new DotHttp();
     }
 
     public async join(options?: DotConfig): Promise<Cell> {
@@ -28,10 +29,19 @@ export class Dot {
             announce: options?.announce || false,
             lookup: options?.lookup || false,
             port: options?.port || 3284
-        }, options)
+        }, options);
 
         this._network = await createNetwork(this._atom, networkOptions);
         return this._network;
+    }
+
+    public async startHttpService(port?: number): Promise<Dot>{
+        await this._dotHttp.listen(port || await findAvailablePort(8080));
+        return this;
+    }
+
+    get httpServer(): DotHttp {
+        return this._dotHttp;
     }
 
     get key(): string {
